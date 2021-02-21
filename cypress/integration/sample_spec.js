@@ -1,29 +1,44 @@
-describe('My First Test', ()=>{
-    it('Checks if cypress is up and running', ()=>{
-        expect(true).to.equal(true)
-    })
-})
-
-describe('Visit Link', () => {
-    it('Visits my app', () =>{
+describe('Log In Page Regression Suite', ()=>{
+    it('Visits my app', ()=>{
         cy.visit('https://the-internet.herokuapp.com/login')
         cy.contains("Login Page")
+        cy.contains("Username")
+        cy.contains("Password")
     })
-})
 
-describe('Check for username and password inputs', ()=>{
-    it('Checks for the  words username and password', ()=>{
-        cy.contains('Username')
-        cy.contains('Password')
-    })
-})
-
-describe('Checks valid login', ()=>{
-    it("types 'tomsmith' for the username and 'SuperSecretPassword!' for the password", ()=>{
-        cy.get('input:first').type('tomsmith')
-        cy.get('input:last').type('SuperSecretPassword!')
-        cy.get('form').submit()
+    it("Tests log in with valid login credentials", ()=>{
+        cy.get('input[name="username"]').type('tomsmith')
+        cy.get('input[type="password"]').type('SuperSecretPassword!')
+        cy.get('button[type="submit"').click()
         cy.url().should('include', '/secure')
         cy.get('a[href*="/logout"]').click()
+    })
+
+    it("Tests log in with invalid login credentials", ()=>{
+        cy.get('input[name="username"]').type('testsmith')
+        cy.get('input[type="password"]').type('testpassword')
+        cy.get('button[type="submit"').click()
+        cy.contains('Your username is invalid!').should('be.visible')
+        cy.get('a[class="close"]').click({force: true})
+    })
+
+    it("Tests log in with no credentials", ()=>{
+        cy.get('button[type="submit"').click()
+        cy.contains('Your username is invalid!').should('be.visible')
+        cy.get('a[class="close"]').click({force: true})
+    })
+
+    it("Tests log in with only username credentials", ()=>{
+        cy.get('input[name="username"]').type('testsmith')
+        cy.get('button[type="submit"').click()
+        cy.contains('Your username is invalid!').should('be.visible')
+        cy.get('a[class="close"]').click({force: true})
+    })
+
+    it("Tests log in with only password credentials", ()=>{
+        cy.get('input[type="password"]').type('testpassword')
+        cy.get('button[type="submit"').click()
+        cy.contains('Your username is invalid!').should('be.visible')
+        cy.get('a[class="close"]').click({force: true})
     })
 })
