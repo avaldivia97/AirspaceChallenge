@@ -2,9 +2,6 @@ describe('Log In Page Regression Suite', ()=>{
 
     beforeEach(()=>{
         cy.visit('https://the-internet.herokuapp.com/login')
-        cy.contains("Login Page")
-        cy.contains("Username")
-        cy.contains("Password")
         cy.get('input[name="username"]').as('username')
         cy.get('input[type="password"]').as('password')
         cy.get('button[type="submit"').as('submitButton')
